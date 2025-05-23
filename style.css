@@ -78,3 +78,72 @@ li button:hover {
 li div { /* Wrapper for buttons to keep them on the right */
     display: flex;
 }
+
+/* Dark Mode Toggle Styles */
+#darkModeToggleContainer {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+#darkModeToggle {
+    font-size: 24px; /* Adjust size as needed */
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff; /* General text color for dark mode */
+}
+
+body.dark-mode h1 {
+    color: #ffffff;
+}
+
+body.dark-mode input[type="text"] {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #555555;
+}
+
+body.dark-mode button {
+    background-color: #444444;
+    color: #ffffff;
+}
+
+body.dark-mode button:hover {
+    background-color: #555555;
+}
+
+body.dark-mode ul {
+    /* No specific change needed for ul itself unless desired */
+}
+
+body.dark-mode li {
+    background-color: #222222;
+    border: 1px solid #444444;
+    color: #ffffff;
+}
+
+body.dark-mode .completed {
+    color: #aaaaaa;
+}
+
+/* Ensure buttons in list items are styled for dark mode */
+body.dark-mode li button {
+    /* background-color is already set for buttons, but can be overridden if needed */
+    /* For example, if default dark mode button is too dark/light for li items */
+    /* Example: make them slightly distinct from main buttons if desired */
+    background-color: #555555; 
+    color: #ffffff;
+}
+
+body.dark-mode li button:hover {
+    opacity: 0.8; /* Keep existing hover effect, adjust if needed */
+}
+
+body.dark-mode li button.complete-btn {
+    background-color: #006400; /* Darker green for complete button in dark mode */
+}

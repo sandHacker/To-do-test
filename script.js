@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
     const todoInput = document.getElementById('todo-input');
     const addTodoBtn = document.getElementById('add-todo-btn');
     const todoList = document.getElementById('todo-list');
@@ -44,4 +46,31 @@ document.addEventListener('DOMContentLoaded', () => {
             addTodoItem();
         }
     });
+
+    // Dark Mode Functionality
+    function toggleDarkMode() {
+        body.classList.toggle('dark-mode');
+        if (body.classList.contains('dark-mode')) {
+            darkModeToggle.textContent = '☀️';
+            localStorage.setItem('theme', 'dark');
+        } else {
+            darkModeToggle.textContent = '🌙';
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
+    if (darkModeToggle) { // Ensure the toggle element exists
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+
+        // Initialize theme based on localStorage
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            darkModeToggle.textContent = '☀️';
+        } else {
+            // Default to light mode if no theme or 'light' is stored
+            body.classList.remove('dark-mode'); 
+            darkModeToggle.textContent = '🌙';
+        }
+    }
 });
