@@ -51,6 +51,12 @@ li {
     align-items: center;
 }
 
+li > span {
+    overflow-wrap: break-word;
+    flex-grow: 1;
+    min-width: 0; /* Helps the flex item shrink correctly and wrap text */
+}
+
 .completed {
     text-decoration: line-through;
     color: #aaa;

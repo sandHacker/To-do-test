@@ -14,7 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const listItem = document.createElement('li');
-        listItem.textContent = todoText;
+
+        const textSpan = document.createElement('span');
+        textSpan.textContent = todoText;
+        listItem.appendChild(textSpan);
 
         const completeButton = document.createElement('button');
         completeButton.textContent = 'Complete';
