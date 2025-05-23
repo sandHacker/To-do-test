@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List Tests</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        #test-results { margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px; }
+        .pass { color: green; }
+        .fail { color: red; }
+        iframe { width: 100%; height: 300px; border: 1px solid #ddd; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>To-Do List - Automated Tests</h1>
+    <p>Open the browser console to see detailed test results. Summary below:</p>
+    <div id="test-results"></div>
+    <iframe src="index.html" id="todo-app-iframe"></iframe>
+
+    <script>
+        const iframe = document.getElementById('todo-app-iframe');
+        const testResultsDiv = document.getElementById('test-results');
+
+        function logTestResult(testName, passed, message = '') {
+            const resultP = document.createElement('p');
+            resultP.textContent = `${testName}: ${passed ? 'PASS' : 'FAIL'} ${message ? '- ' + message : ''}`;
+            resultP.className = passed ? 'pass' : 'fail';
+            testResultsDiv.appendChild(resultP);
+            if (!passed) {
+                console.error(`${testName}: FAIL ${message ? '- ' + message : ''}`);
+            } else {
+                console.log(`${testName}: PASS`);
+            }
+        }
+
+        iframe.onload = () => {
+            console.log('To-Do List App loaded in iframe. Starting tests...');
+            runAllTests();
+        };
+
+        async function runAllTests() {
+            const appDoc = iframe.contentDocument || iframe.contentWindow.document;
+            if (!appDoc) {
+                logTestResult('Setup', false, 'Could not access iframe document.');
+                return;
+            }
+
+            const todoInput = appDoc.getElementById('todo-input');
+            const addTodoBtn = appDoc.getElementById('add-todo-btn');
+            const todoList = appDoc.getElementById('todo-list');
+
+            if (!todoInput || !addTodoBtn || !todoList) {
+                logTestResult('Setup', false, 'Could not find necessary elements in iframe.');
+                return;
+            }
+            
+            // Utility to reset list and input for next test
+            function resetApp() {
+                todoList.innerHTML = ''; // Clear list
+                todoInput.value = '';    // Clear input
+            }
+            
+            // --- Test 1: Adding Items ---
+            async function testAddingItems() {
+                resetApp();
+                const testName = "Test Adding Items";
+                const itemText = "New Test Item";
+                todoInput.value = itemText;
+                addTodoBtn.click();
+
+                // Need a slight delay for DOM update if script.js manipulates DOM asynchronously (though current script is sync)
+                await new Promise(resolve => setTimeout(resolve, 50)); 
+
+                const firstItem = todoList.querySelector('li');
+                const passed = firstItem && firstItem.textContent.includes(itemText);
+                logTestResult(testName, passed, passed ? '' : 'Item not found in list or text mismatch.');
+                console.assert(passed, `${testName}: Expected item "${itemText}" to be in the list.`);
+            }
+
+            // --- Test 2: Completing Items ---
+            async function testCompletingItems() {
+                resetApp();
+                const testName = "Test Completing Items";
+                const itemText = "Complete Me Item";
+                todoInput.value = itemText;
+                addTodoBtn.click();
+                await new Promise(resolve => setTimeout(resolve, 50));
+
+                const firstItem = todoList.querySelector('li');
+                if (!firstItem) {
+                    logTestResult(testName, false, "No item added to test completion.");
+                    console.assert(false, `${testName}: No item found to complete.`);
+                    return;
+                }
+                const completeBtn = firstItem.querySelector('.complete-btn');
+                if (!completeBtn) {
+                    logTestResult(testName, false, "Complete button not found on item.");
+                    console.assert(false, `${testName}: Complete button not found.`);
+                    return;
+                }
+                completeBtn.click();
+                await new Promise(resolve => setTimeout(resolve, 50));
+                
+                const passed = firstItem.classList.contains('completed');
+                logTestResult(testName, passed, passed ? '' : 'Item does not have "completed" class.');
+                console.assert(passed, `${testName}: Expected item to have "completed" class.`);
+            }
+
+            // --- Test 3: Removing Items ---
+            async function testRemovingItems() {
+                resetApp();
+                const testName = "Test Removing Items";
+                const itemText = "Remove Me Item";
+                todoInput.value = itemText;
+                addTodoBtn.click();
+                await new Promise(resolve => setTimeout(resolve, 50));
+
+                let firstItem = todoList.querySelector('li');
+                if (!firstItem) {
+                    logTestResult(testName, false, "No item added to test removal.");
+                    console.assert(false, `${testName}: No item found to remove.`);
+                    return;
+                }
+                const removeBtn = firstItem.querySelector('.remove-btn');
+                 if (!removeBtn) {
+                    logTestResult(testName, false, "Remove button not found on item.");
+                    console.assert(false, `${testName}: Remove button not found.`);
+                    return;
+                }
+                removeBtn.click();
+                await new Promise(resolve => setTimeout(resolve, 50));
+
+                firstItem = todoList.querySelector('li'); // Re-query
+                const passed = !firstItem; // Should be null if removed
+                logTestResult(testName, passed, passed ? '' : 'Item was not removed from the list.');
+                console.assert(passed, `${testName}: Expected item to be removed from the list.`);
+            }
+
+            // --- Test 4: Preventing Empty Items ---
+            async function testPreventingEmptyItems() {
+                resetApp();
+                const testName = "Test Preventing Empty Items";
+                const initialItemCount = todoList.children.length;
+                
+                // Mock alert so it doesn't block tests
+                let alertCalled = false;
+                iframe.contentWindow.alert = (message) => {
+                    console.log(`Alert shown (mocked): ${message}`);
+                    alertCalled = true;
+                };
+
+                todoInput.value = "   "; // Empty or whitespace
+                addTodoBtn.click();
+                await new Promise(resolve => setTimeout(resolve, 50));
+
+                const finalItemCount = todoList.children.length;
+                const passed = (finalItemCount === initialItemCount) && alertCalled;
+                logTestResult(testName, passed, passed ? '' : `Item count changed or alert not called. Initial: ${initialItemCount}, Final: ${finalItemCount}, Alert: ${alertCalled}`);
+                console.assert(passed, `${testName}: Expected no item to be added and alert to be called.`);
+                
+                // Restore original alert
+                delete iframe.contentWindow.alert;
+            }
+
+            // Run tests sequentially
+            await testAddingItems();
+            await testCompletingItems();
+            await testRemovingItems();
+            await testPreventingEmptyItems();
+            
+            logTestResult("All Tests Summary", true, "All tests have concluded. Check console for details.");
+        }
+    </script>
+</body>
+</html>
