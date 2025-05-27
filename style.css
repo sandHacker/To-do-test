@@ -98,6 +98,74 @@ li div { /* Wrapper for buttons to keep them on the right */
     font-size: 24px; /* Adjust size as needed */
 }
 
+/* Styles for new buttons */
+#add-todo-btn, #end-day-btn, #history-btn {
+    margin-bottom: 10px; /* Or adjust existing button margins */
+    margin-right: 5px; /* Space between these buttons if they are inline */
+}
+
+/* History Page Styles */
+#history-page {
+    width: 80%; /* Or a fixed width like 500px */
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    /* display: none; by default, controlled by JS */
+}
+
+#history-page h2, #history-page h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* History Dates Section */
+#dates-list {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+#dates-list li {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+#dates-list li:hover {
+    background-color: #e9e9e9;
+}
+
+/* Archived Tasks Viewer */
+#archived-tasks-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#archived-tasks-list li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    /* Colors for text (green/red) are set by JS inline. */
+}
+
+#archived-tasks-list li:last-child {
+    border-bottom: none;
+}
+
+#archived-tasks-list li.completed-task-history {
+    color: green;
+}
+
+#archived-tasks-list li.incomplete-task-history {
+    color: red;
+}
+
+
 /* Dark Mode Styles */
 body.dark-mode {
     background-color: #121212;
@@ -152,4 +220,40 @@ body.dark-mode li button:hover {
 
 body.dark-mode li button.complete-btn {
     background-color: #006400; /* Darker green for complete button in dark mode */
+}
+
+/* Dark Mode for History Page */
+body.dark-mode #history-page {
+    background-color: #222222;
+    border-color: #444444;
+}
+
+body.dark-mode #history-page h2, body.dark-mode #history-page h3 {
+    color: #ffffff;
+}
+
+body.dark-mode #dates-list li {
+    background-color: #333333;
+    border-color: #555555;
+    color: #f0f0f0; /* Text color for list items in dark mode */
+}
+
+body.dark-mode #dates-list li:hover {
+    background-color: #444444;
+}
+
+body.dark-mode #archived-tasks-list li {
+    border-bottom-color: #444444;
+    /* Text color for tasks will be green/red via inline styles from JS.
+       Ensure these colors have good contrast against #222222 background.
+       If needed, adjust the green/red shades in JS for dark mode,
+       or use CSS classes and define dark mode specific green/red. */
+}
+
+body.dark-mode #archived-tasks-list li.completed-task-history {
+    color: #32cd32; /* LimeGreen, often better on dark backgrounds */
+}
+
+body.dark-mode #archived-tasks-list li.incomplete-task-history {
+    color: #ff6347; /* Tomato, often better on dark backgrounds */
 }
