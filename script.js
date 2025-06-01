@@ -1,5 +1,6 @@
 // script.js
 document.addEventListener('DOMContentLoaded', () => {
+
     const appContainer = document.getElementById('app-container');
     if (!appContainer || appContainer.style.display === 'none') {
         console.log('User not logged in or app container not visible. To-Do list not initialized.');
@@ -7,16 +8,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     console.log('User logged in. Initializing To-Do list.');
 
+
     const todoInput = document.getElementById('todo-input');
     const addTodoBtn = document.getElementById('add-todo-btn');
     const todoList = document.getElementById('todo-list');
     const endDayBtn = document.getElementById('end-day-btn');
     const historyBtn = document.getElementById('history-btn');
     const historyPage = document.getElementById('history-page');
+
     const backToMainBtn = document.getElementById('back-to-main-btn');
     const datesList = document.getElementById('dates-list');
     const archivedTasksList = document.getElementById('archived-tasks-list');
     const selectedHistoryDateSpan = document.getElementById('selected-history-date');
+
 
     let draggedItem = null; // To store the item being dragged
 
@@ -245,13 +249,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- History Page Logic ---
     function showMainPage() {
         if (historyPage) historyPage.style.display = 'none';
+
         if (document.getElementById('todo-input')) document.getElementById('todo-input').style.display = '';
         if (document.getElementById('add-todo-btn')) document.getElementById('add-todo-btn').style.display = '';
         if (document.getElementById('todo-list')) document.getElementById('todo-list').style.display = '';
         if (document.getElementById('end-day-btn')) document.getElementById('end-day-btn').style.display = '';
         if (document.getElementById('history-btn')) document.getElementById('history-btn').style.display = '';
+
         const mainH1 = document.querySelector('#app-container > h1'); // More specific selector for the main H1
         if (mainH1) mainH1.style.display = '';
+
 
 
         if (datesList) datesList.innerHTML = '';
@@ -263,6 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!selectedHistoryDateSpan || !archivedTasksList) return;
         selectedHistoryDateSpan.textContent = date;
         archivedTasksList.innerHTML = '';
+
         let tasks;
         try {
             tasks = JSON.parse(localStorage.getItem(`history_${date}`)) || [];
@@ -296,13 +304,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showHistoryPage() {
         if (historyPage) historyPage.style.display = 'block';
+
         if (document.getElementById('todo-input')) document.getElementById('todo-input').style.display = 'none';
         if (document.getElementById('add-todo-btn')) document.getElementById('add-todo-btn').style.display = 'none';
         if (document.getElementById('todo-list')) document.getElementById('todo-list').style.display = 'none';
         if (document.getElementById('end-day-btn')) document.getElementById('end-day-btn').style.display = 'none';
         if (document.getElementById('history-btn')) document.getElementById('history-btn').style.display = 'none';
+
         const mainH1 = document.querySelector('#app-container > h1'); // More specific selector for the main H1
         if (mainH1) mainH1.style.display = 'none';
+
 
 
         if (!datesList) return;
@@ -330,6 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
             datesList.appendChild(errorLi);
             return;
         }
+
         if (!historyFound) {
             const noHistoryLi = document.createElement('li');
             noHistoryLi.textContent = 'No history found.';
@@ -354,12 +366,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
         }
+
         saveTodosToStorage([]); // Clear current todos
+
         todoList.innerHTML = '';
         alert('Day ended. Your list has been archived.');
     }
 
-    // Event Listeners for buttons
+
     addTodoBtn.addEventListener('click', addTodoItem);
     if (endDayBtn) endDayBtn.addEventListener('click', endDay);
     if (historyBtn) historyBtn.addEventListener('click', showHistoryPage);
@@ -370,7 +384,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+
     // Initial setup
     loadTodos(); // Load existing todos
     showMainPage(); // Show the main to-do list part by default
+
 });
