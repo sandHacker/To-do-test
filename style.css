@@ -257,3 +257,149 @@ body.dark-mode #archived-tasks-list li.completed-task-history {
 body.dark-mode #archived-tasks-list li.incomplete-task-history {
     color: #ff6347; /* Tomato, often better on dark backgrounds */
 }
+
+/* Add styles for login/signup containers */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    margin-top: 50px; /* Give some space from the top */
+}
+
+/* Form styling */
+#login-form, #signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between form elements */
+    padding: 20px;
+    background-color: #fff; /* Light background for the form */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 300px; /* Or adjust as needed */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow */
+}
+
+#login-form div, #signup-form div {
+    display: flex;
+    flex-direction: column;
+}
+
+#login-form label, #signup-form label {
+    margin-bottom: 5px;
+    color: #333; /* Darker text for labels */
+}
+
+#login-form input[type="text"],
+#login-form input[type="password"],
+#signup-form input[type="text"],
+#signup-form input[type="password"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#login-form button, #signup-form button {
+    padding: 10px 15px;
+    background-color: #5cb85c; /* Green submit button */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#login-form button:hover, #signup-form button:hover {
+    background-color: #4cae4c; /* Darker green on hover */
+}
+
+/* Paragraphs with links below the form */
+.container p {
+    margin-top: 15px;
+    color: #555;
+}
+
+.container a {
+    color: #5cb85c;
+    text-decoration: none;
+}
+
+.container a:hover {
+    text-decoration: underline;
+}
+
+/* Dark Mode adaptations for login/signup pages */
+body.dark-mode .container {
+    /* Container itself doesn't need much change, relies on body background */
+}
+
+body.dark-mode #login-form, body.dark-mode #signup-form {
+    background-color: #222222; /* Dark background for form */
+    border-color: #444444;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Adjusted shadow for dark */
+}
+
+body.dark-mode #login-form label, body.dark-mode #signup-form label {
+    color: #f0f0f0; /* Light text for labels */
+}
+
+body.dark-mode #login-form input[type="text"],
+body.dark-mode #login-form input[type="password"],
+body.dark-mode #signup-form input[type="text"],
+body.dark-mode #signup-form input[type="password"] {
+    background-color: #333333;
+    color: #ffffff;
+    border-color: #555555;
+}
+
+body.dark-mode #login-form button, body.dark-mode #signup-form button {
+    background-color: #444444; /* Darker button */
+    /* color is already white */
+}
+
+body.dark-mode #login-form button:hover, body.dark-mode #signup-form button:hover {
+    background-color: #555555;
+}
+
+body.dark-mode .container p {
+    color: #bbbbbb;
+}
+
+body.dark-mode .container a {
+    color: #6fbf73; /* Lighter green for links in dark mode */
+}
+
+/* Auth container on index.html */
+#auth-container {
+    text-align: center;
+    margin-top: 50px;
+}
+
+#auth-container h1 {
+    margin-bottom: 20px;
+}
+
+#auth-container p {
+    margin-bottom: 10px;
+}
+
+#auth-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 5px;
+}
+
+/* Dark mode for auth container */
+body.dark-mode #auth-container {
+    /* Text colors will be inherited from body.dark-mode */
+}
+
+body.dark-mode #auth-container button {
+    /* Button styles inherited from body.dark-mode button */
+}
+
+/* Ensure app-container takes up space if needed, though display:none initially */
+#app-container {
+    /* Styles for when it's visible can be added here or ensure existing ones are sufficient */
+}
