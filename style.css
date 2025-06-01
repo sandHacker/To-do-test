@@ -1,261 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Lato:wght@400;700&display=swap');
+
+/* Reset and Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px; /* Base font size */
+}
+
 body {
-    font-family: sans-serif;
+    font-family: 'Lato', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #f4f4f4;
+    background-color: #FAF9F6;
+    color: #2F4F4F;
     margin: 0;
     padding: 20px;
+    line-height: 1.6;
+}
+
+h1, h2, h3 {
+    font-family: 'Lora', serif;
+    color: #2F4F4F;
+    margin-bottom: 0.75em;
+    line-height: 1.3;
 }
 
 h1 {
-    color: #333;
-    margin-bottom: 20px;
+    font-size: 2.5rem;
+    margin-top: 20px;
 }
 
-input[type="text"] {
-    padding: 10px;
-    margin-right: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    width: 250px;
+h2 {
+    font-size: 2rem;
 }
 
-button {
-    padding: 10px 15px;
-    background-color: #5cb85c;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+h3 {
+    font-size: 1.5rem;
 }
 
-button:hover {
-    background-color: #4cae4c;
+p {
+    margin-bottom: 1rem;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
-    width: 300px; /* Or adjust as needed */
+a {
+    color: #4DB6AC;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
-li {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-li > span {
-    overflow-wrap: break-word;
-    flex-grow: 1;
-    min-width: 0; /* Helps the flex item shrink correctly and wrap text */
-}
-
-.completed {
-    text-decoration: line-through;
-    color: #aaa;
-}
-
-/* Styling for the buttons within list items */
-li button {
-    padding: 5px 8px;
-    margin-left: 5px; /* Space between buttons */
-    background-color: #dc3545; /* Red for remove, can be different for complete */
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-li button.complete-btn { /* Specific style for complete button if needed */
-    background-color: #28a745; /* Green for complete */
-}
-
-li button:hover {
-    opacity: 0.8;
-}
-
-li div { /* Wrapper for buttons to keep them on the right */
-    display: flex;
-}
-
-/* Dark Mode Toggle Styles */
-#darkModeToggleContainer {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    cursor: pointer;
-    z-index: 1000; /* Ensure it's above other elements */
-}
-
-#darkModeToggle {
-    font-size: 24px; /* Adjust size as needed */
-}
-
-/* Styles for new buttons */
-#add-todo-btn, #end-day-btn, #history-btn {
-    margin-bottom: 10px; /* Or adjust existing button margins */
-    margin-right: 5px; /* Space between these buttons if they are inline */
-}
-
-/* History Page Styles */
-#history-page {
-    width: 80%; /* Or a fixed width like 500px */
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    /* display: none; by default, controlled by JS */
-}
-
-#history-page h2, #history-page h3 {
-    color: #333;
-    margin-bottom: 15px;
-}
-
-/* History Dates Section */
-#dates-list {
-    list-style-type: none;
-    padding: 0;
-    margin-bottom: 20px;
-}
-
-#dates-list li {
-    padding: 10px;
-    background-color: #f9f9f9;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    margin-bottom: 5px;
-    cursor: pointer;
-}
-
-#dates-list li:hover {
-    background-color: #e9e9e9;
-}
-
-/* Archived Tasks Viewer */
-#archived-tasks-list {
-    list-style-type: none;
-    padding: 0;
-}
-
-#archived-tasks-list li {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    /* Colors for text (green/red) are set by JS inline. */
-}
-
-#archived-tasks-list li:last-child {
-    border-bottom: none;
-}
-
-#archived-tasks-list li.completed-task-history {
-    color: green;
-}
-
-#archived-tasks-list li.incomplete-task-history {
-    color: red;
-}
-
-
-/* Dark Mode Styles */
-body.dark-mode {
-    background-color: #121212;
-    color: #ffffff; /* General text color for dark mode */
-}
-
-body.dark-mode h1 {
-    color: #ffffff;
-}
-
-body.dark-mode input[type="text"] {
-    background-color: #333333;
-    color: #ffffff;
-    border: 1px solid #555555;
-}
-
-body.dark-mode button {
-    background-color: #444444;
-    color: #ffffff;
-}
-
-body.dark-mode button:hover {
-    background-color: #555555;
-}
-
-body.dark-mode ul {
-    /* No specific change needed for ul itself unless desired */
-}
-
-body.dark-mode li {
-    background-color: #222222;
-    border: 1px solid #444444;
-    color: #ffffff;
-}
-
-body.dark-mode .completed {
-    color: #aaaaaa;
-}
-
-/* Ensure buttons in list items are styled for dark mode */
-body.dark-mode li button {
-    /* background-color is already set for buttons, but can be overridden if needed */
-    /* For example, if default dark mode button is too dark/light for li items */
-    /* Example: make them slightly distinct from main buttons if desired */
-    background-color: #555555; 
-    color: #ffffff;
-}
-
-body.dark-mode li button:hover {
-    opacity: 0.8; /* Keep existing hover effect, adjust if needed */
-}
-
-body.dark-mode li button.complete-btn {
-    background-color: #006400; /* Darker green for complete button in dark mode */
-}
-
-/* Dark Mode for History Page */
-body.dark-mode #history-page {
-    background-color: #222222;
-    border-color: #444444;
-}
-
-body.dark-mode #history-page h2, body.dark-mode #history-page h3 {
-    color: #ffffff;
-}
-
-body.dark-mode #dates-list li {
-    background-color: #333333;
-    border-color: #555555;
-    color: #f0f0f0; /* Text color for list items in dark mode */
-}
-
-body.dark-mode #dates-list li:hover {
-    background-color: #444444;
-}
-
-body.dark-mode #archived-tasks-list li {
-    border-bottom-color: #444444;
-    /* Text color for tasks will be green/red via inline styles from JS.
-       Ensure these colors have good contrast against #222222 background.
-       If needed, adjust the green/red shades in JS for dark mode,
-       or use CSS classes and define dark mode specific green/red. */
-}
-
-body.dark-mode #archived-tasks-list li.completed-task-history {
-    color: #32cd32; /* LimeGreen, often better on dark backgrounds */
-}
-
-body.dark-mode #archived-tasks-list li.incomplete-task-history {
-    color: #ff6347; /* Tomato, often better on dark backgrounds */
+a:hover {
+    color: #388E8E;
+    text-decoration: underline;
 }
 
 /* Add styles for login/signup containers */
@@ -264,54 +64,89 @@ body.dark-mode #archived-tasks-list li.incomplete-task-history {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-    margin-top: 50px; /* Give some space from the top */
+    padding: 30px;
+    margin-top: 40px;
+    width: 100%;
+    max-width: 450px;
 }
 
 /* Form styling */
 #login-form, #signup-form {
     display: flex;
     flex-direction: column;
-    gap: 15px; /* Space between form elements */
-    padding: 20px;
-    background-color: #fff; /* Light background for the form */
-    border: 1px solid #ddd;
+    gap: 20px;
+    padding: 30px;
+    background-color: #FFFFFF;
+    border: 1px solid #D3D3D3;
     border-radius: 8px;
-    width: 300px; /* Or adjust as needed */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow */
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 #login-form div, #signup-form div {
     display: flex;
     flex-direction: column;
+    gap: 8px;
 }
 
 #login-form label, #signup-form label {
-    margin-bottom: 5px;
-    color: #333; /* Darker text for labels */
+    font-weight: bold;
+    color: #2F4F4F;
+    font-size: 0.95rem;
 }
 
-#login-form input[type="text"],
-#login-form input[type="password"],
-#signup-form input[type="text"],
-#signup-form input[type="password"] {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+input[type="text"], input[type="password"] {
+    padding: 12px 15px;
+    border: 1px solid #CCCCCC;
+    border-radius: 6px;
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    color: #2F4F4F;
+    background-color: #FFFFFF;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-#login-form button, #signup-form button {
-    padding: 10px 15px;
-    background-color: #5cb85c; /* Green submit button */
+input[type="text"]:focus, input[type="password"]:focus {
+    outline: none;
+    border-color: #4DB6AC;
+    box-shadow: 0 0 0 3px rgba(77, 182, 172, 0.2);
+}
+
+/* General button styles */
+button, input[type="submit"] {
+    padding: 12px 20px;
+    background-color: #4DB6AC;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600; /* Semi-bold */
+    font-size: 1rem;
+    text-transform: none; /* Softer feel */
+    letter-spacing: normal;
+    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.07);
 }
 
-#login-form button:hover, #signup-form button:hover {
-    background-color: #4cae4c; /* Darker green on hover */
+button:hover, input[type="submit"]:hover {
+    background-color: #388E8E;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+button:active, input[type="submit"]:active {
+    transform: translateY(0px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.07);
+}
+
+/* Login/Signup form submit buttons can be more prominent */
+#login-form button, #signup-form button {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 14px 20px;
+    font-size: 1.05rem;
+    font-weight: bold; /* Ensure it's bold as per original general style */
 }
 
 /* Paragraphs with links below the form */
@@ -320,86 +155,388 @@ body.dark-mode #archived-tasks-list li.incomplete-task-history {
     color: #555;
 }
 
-.container a {
-    color: #5cb85c;
-    text-decoration: none;
+/* Dark Mode Toggle Styles */
+#darkModeToggleContainer {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+    z-index: 1000;
 }
 
-.container a:hover {
-    text-decoration: underline;
+#darkModeToggle {
+    font-size: 24px;
+    padding: 5px;
+    border-radius: 50%;
 }
 
-/* Dark Mode adaptations for login/signup pages */
-body.dark-mode .container {
-    /* Container itself doesn't need much change, relies on body background */
-}
-
-body.dark-mode #login-form, body.dark-mode #signup-form {
-    background-color: #222222; /* Dark background for form */
-    border-color: #444444;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Adjusted shadow for dark */
-}
-
-body.dark-mode #login-form label, body.dark-mode #signup-form label {
-    color: #f0f0f0; /* Light text for labels */
-}
-
-body.dark-mode #login-form input[type="text"],
-body.dark-mode #login-form input[type="password"],
-body.dark-mode #signup-form input[type="text"],
-body.dark-mode #signup-form input[type="password"] {
-    background-color: #333333;
-    color: #ffffff;
-    border-color: #555555;
-}
-
-body.dark-mode #login-form button, body.dark-mode #signup-form button {
-    background-color: #444444; /* Darker button */
-    /* color is already white */
-}
-
-body.dark-mode #login-form button:hover, body.dark-mode #signup-form button:hover {
-    background-color: #555555;
-}
-
-body.dark-mode .container p {
-    color: #bbbbbb;
-}
-
-body.dark-mode .container a {
-    color: #6fbf73; /* Lighter green for links in dark mode */
-}
 
 /* Auth container on index.html */
 #auth-container {
     text-align: center;
     margin-top: 50px;
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
 }
 
 #auth-container h1 {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 #auth-container p {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
 }
 
 #auth-container button {
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    margin: 10px 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: bold; /* Ensure it's bold */
+}
+
+/* App Container (#app-container) and To-Do List specific items on index.html */
+#app-container {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+    padding: 20px;
+    display: none;
+}
+
+#app-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+#todo-input {
+    width: calc(100% - 130px);
+    margin-right: 10px;
+    margin-bottom: 20px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#add-todo-btn {
+    width: 110px;
+    padding: 12px 10px;
+    vertical-align: middle;
+    margin-bottom: 20px;
+    /* text-transform: none; Inherited from general button */
+}
+
+/* Container for action buttons like End Day, View History, Logout */
+#app-container > button:not(#add-todo-btn) {
     margin: 5px;
 }
-
-/* Dark mode for auth container */
-body.dark-mode #auth-container {
-    /* Text colors will be inherited from body.dark-mode */
+#end-day-btn, #history-btn, #logout-btn, #back-to-main-btn {
+    /* Inherit general button styles, which is now text-transform: none; */
 }
 
-body.dark-mode #auth-container button {
-    /* Button styles inherited from body.dark-mode button */
+
+ul#todo-list {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    margin-top: 20px;
 }
 
-/* Ensure app-container takes up space if needed, though display:none initially */
-#app-container {
-    /* Styles for when it's visible can be added here or ensure existing ones are sufficient */
+li {
+    background-color: #FFFFFF;
+    border: 1px solid #D3D3D3;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+li:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+li > span {
+    flex-grow: 1;
+    min-width: 0;
+    padding-right: 15px;
+    overflow-wrap: break-word;
+}
+
+.completed span {
+    text-decoration: line-through;
+    color: #777;
+}
+
+li div {
+    display: flex;
+    gap: 8px;
+}
+
+/* Buttons inside list items (Complete, Remove) */
+li button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: normal;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+li button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+li button.complete-btn {
+    background-color: #66BB6A;
+    color: white;
+}
+
+li button.complete-btn:hover {
+    background-color: #4CAF50;
+}
+
+li button.remove-btn {
+    background-color: #EF5350;
+    color: white;
+}
+
+li button.remove-btn:hover {
+    background-color: #E53935;
+}
+
+.completed li button.complete-btn { /* Style for complete button when task IS completed */
+    background-color: #A5D6A7;
+    color: #333;
+}
+.completed li button.complete-btn:hover {
+    background-color: #81C784;
+}
+
+
+/* History Page Styles */
+#history-page {
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #FFFFFF;
+    border: 1px solid #D3D3D3;
+    border-radius: 8px;
+}
+
+#history-page h2, #history-page h3 {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+#dates-list {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+#dates-list li {
+    padding: 12px 15px;
+    background-color: #F8F8F8;
+    border: 1px solid #E0E0E0;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#dates-list li:hover {
+    background-color: #E9E9E9;
+    border-color: #C0C0C0;
+}
+
+#archived-tasks-viewer h3 {
+    margin-top: 20px;
+}
+#archived-tasks-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#archived-tasks-list li {
+    padding: 10px 15px;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+#archived-tasks-list li:last-child {
+    border-bottom: none;
+}
+
+#archived-tasks-list li.completed-task-history {
+    color: #28a745;
+}
+
+#archived-tasks-list li.incomplete-task-history {
+    color: #dc3545;
+}
+
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #1A202C;
+    color: #E2E8F0;
+}
+
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
+    color: #E2E8F0;
+}
+
+body.dark-mode a {
+    color: #80CBC4;
+}
+
+body.dark-mode a:hover {
+    color: #4DB6AC;
+}
+
+body.dark-mode .container {
+}
+
+body.dark-mode #login-form, body.dark-mode #signup-form {
+    background-color: #2D3748;
+    border-color: #4A5568;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+body.dark-mode #login-form label, body.dark-mode #signup-form label {
+    color: #E2E8F0;
+}
+
+body.dark-mode input[type="text"], body.dark-mode input[type="password"] {
+    background-color: #252A34;
+    color: #E2E8F0;
+    border-color: #4A5568;
+}
+
+body.dark-mode input[type="text"]:focus, body.dark-mode input[type="password"]:focus {
+    border-color: #80CBC4;
+    box-shadow: 0 0 0 3px rgba(128, 203, 196, 0.25);
+}
+
+/* Dark Mode Button Refinements */
+body.dark-mode button, body.dark-mode input[type="submit"] {
+    background-color: #80CBC4;
+    color: #1A202C;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+body.dark-mode button:hover, body.dark-mode input[type="submit"]:hover {
+    background-color: #4DB6AC;
+    color: #FFFFFF;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+/* Dark mode for prominent buttons like Login/Signup form submits and #auth-container button */
+body.dark-mode #login-form button, body.dark-mode #signup-form button, body.dark-mode #auth-container button {
+    background-color: #80CBC4;
+    color: #1A202C;
+    /* text-transform and letter-spacing are inherited from light mode definitions */
+}
+
+body.dark-mode #login-form button:hover, body.dark-mode #signup-form button:hover, body.dark-mode #auth-container button:hover {
+    background-color: #4DB6AC;
+    color: #FFFFFF;
+}
+
+body.dark-mode .container p {
+    color: #A0AEC0;
+}
+
+body.dark-mode #auth-container p {
+    color: #CBD5E0;
+}
+
+/* Dark Mode for App Container and To-Do List items */
+body.dark-mode #app-container {
+}
+
+body.dark-mode #todo-input {
+}
+
+body.dark-mode li {
+    background-color: #2D3748;
+    border-color: #4A5568;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+body.dark-mode li:hover {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .completed span {
+    color: #A0AEC0;
+}
+
+/* Specific dark mode overrides for list item buttons */
+body.dark-mode li button.complete-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+body.dark-mode li button.complete-btn:hover {
+    background-color: #388E3C;
+}
+
+body.dark-mode li button.remove-btn {
+    background-color: #E53935;
+    color: white;
+}
+
+body.dark-mode li button.remove-btn:hover {
+    background-color: #C62828;
+}
+
+body.dark-mode .completed li button.complete-btn {
+    background-color: #81C784;
+    color: #1A202C;
+}
+body.dark-mode .completed li button.complete-btn:hover {
+    background-color: #66BB6A;
+}
+
+
+/* Dark Mode for History Page */
+body.dark-mode #history-page {
+    background-color: #2D3748;
+    border-color: #4A5568;
+}
+
+body.dark-mode #history-page h2, body.dark-mode #history-page h3 {
+    color: #E2E8F0;
+}
+
+body.dark-mode #dates-list li {
+    background-color: #252A34;
+    border-color: #4A5568;
+    color: #CBD5E0;
+}
+
+body.dark-mode #dates-list li:hover {
+    background-color: #303640;
+}
+
+body.dark-mode #archived-tasks-list li {
+    border-bottom-color: #4A5568;
+}
+
+body.dark-mode #archived-tasks-list li.completed-task-history {
+    color: #68D391;
+}
+
+body.dark-mode #archived-tasks-list li.incomplete-task-history {
+    color: #FC8181;
+}
+
+body.dark-mode #darkModeToggle {
 }
