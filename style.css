@@ -162,6 +162,7 @@ button:active, input[type="submit"]:active {
     left: 10px;
     cursor: pointer;
     z-index: 1000;
+
 }
 
 #darkModeToggle {
@@ -169,6 +170,7 @@ button:active, input[type="submit"]:active {
     padding: 5px;
     border-radius: 50%;
 }
+
 
 
 /* Auth container on index.html */
@@ -187,6 +189,7 @@ button:active, input[type="submit"]:active {
 #auth-container p {
     margin-bottom: 20px;
     font-size: 1.1rem;
+
 }
 
 #auth-container button {
@@ -211,6 +214,7 @@ button:active, input[type="submit"]:active {
     text-align: center;
     margin-bottom: 30px;
 }
+
 
 #todo-input {
     width: calc(100% - 130px);
@@ -254,7 +258,9 @@ li {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    transition: box-shadow 0.3s ease;
+
+    transition: opacity 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, border-top 0.2s ease, box-shadow 0.3s ease; /* Smooth transitions & added box-shadow from existing */
+
 }
 
 li:hover {
@@ -422,6 +428,7 @@ body.dark-mode input[type="text"], body.dark-mode input[type="password"] {
 body.dark-mode input[type="text"]:focus, body.dark-mode input[type="password"]:focus {
     border-color: #80CBC4;
     box-shadow: 0 0 0 3px rgba(128, 203, 196, 0.25);
+
 }
 
 /* Dark Mode Button Refinements */
@@ -470,6 +477,7 @@ body.dark-mode li {
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
+
 body.dark-mode li:hover {
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
@@ -486,6 +494,7 @@ body.dark-mode li button.complete-btn {
 
 body.dark-mode li button.complete-btn:hover {
     background-color: #388E3C;
+
 }
 
 body.dark-mode li button.remove-btn {
@@ -496,6 +505,7 @@ body.dark-mode li button.remove-btn {
 body.dark-mode li button.remove-btn:hover {
     background-color: #C62828;
 }
+
 
 body.dark-mode .completed li button.complete-btn {
     background-color: #81C784;
@@ -539,4 +549,33 @@ body.dark-mode #archived-tasks-list li.incomplete-task-history {
 }
 
 body.dark-mode #darkModeToggle {
+
+}
+
+/* Drag and Drop Styles */
+#todo-list li.dragging {
+    opacity: 0.5; /* Make the dragged item semi-transparent */
+    background-color: #e0e0e0; /* Light gray background while dragging */
+    border-style: dashed; /* Optional: dashed border */
+}
+
+#todo-list li.drag-over {
+    border-top: 2px solid #4DB6AC; /* Highlight top border of potential drop target */
+    /* Or use background color change: */
+    /* background-color: #f0f8ff; */ /* AliceBlue, a very light blue as hover indication */
+}
+
+/* Dark Mode adaptations for drag states */
+body.dark-mode #todo-list li.dragging {
+    background-color: #4A5568; /* Darker background for dragging item in dark mode */
+    opacity: 0.6;
+    border-style: dashed;
+    border-color: #80CBC4; /* Accent color for dashed border */
+}
+
+body.dark-mode #todo-list li.drag-over {
+    border-top: 2px solid #80CBC4; /* Dark mode accent for drop target highlight */
+    /* Or use background color change: */
+    /* background-color: #303640; */ /* Slightly lighter than item bg for dark mode hover */
+
 }

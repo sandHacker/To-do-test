@@ -1,49 +1,265 @@
 // script.js
 document.addEventListener('DOMContentLoaded', () => {
-    // Check if the app container is visible (meaning user is logged in)
+
     const appContainer = document.getElementById('app-container');
     if (!appContainer || appContainer.style.display === 'none') {
-        // If app container is hidden (user not logged in), do not initialize to-do list logic.
-        // auth.js is responsible for showing the correct container.
         console.log('User not logged in or app container not visible. To-Do list not initialized.');
         return;
     }
-
-    // If we reach here, user is logged in and app container is visible.
     console.log('User logged in. Initializing To-Do list.');
 
-    // const darkModeToggle = document.getElementById('darkModeToggle'); // Handled by auth.js
-    // const body = document.body; // Handled by auth.js
+
     const todoInput = document.getElementById('todo-input');
     const addTodoBtn = document.getElementById('add-todo-btn');
     const todoList = document.getElementById('todo-list');
     const endDayBtn = document.getElementById('end-day-btn');
     const historyBtn = document.getElementById('history-btn');
     const historyPage = document.getElementById('history-page');
-    // const mainTodoListContainer = todoList.parentElement; // Not strictly needed if hiding individual elements
+
     const backToMainBtn = document.getElementById('back-to-main-btn');
     const datesList = document.getElementById('dates-list');
     const archivedTasksList = document.getElementById('archived-tasks-list');
     const selectedHistoryDateSpan = document.getElementById('selected-history-date');
 
-    // Ensure all essential elements exist before proceeding
+
+    let draggedItem = null; // To store the item being dragged
+
     if (!todoInput || !addTodoBtn || !todoList || !endDayBtn || !historyBtn || !historyPage || !backToMainBtn || !datesList || !archivedTasksList || !selectedHistoryDateSpan) {
         console.error('One or more essential to-do list elements are missing from the DOM.');
         return;
     }
 
-    loadTodos();
+    // Helper functions for storage
+    function getTodosFromStorage() {
+        return JSON.parse(localStorage.getItem('todos')) || [];
+    }
+
+    function saveTodosToStorage(todos) {
+        localStorage.setItem('todos', JSON.stringify(todos));
+    }
+
+    // Update functions for complete/remove to use ID
+    function updateTodoStatus(todoId, isCompleted) {
+        let todos = getTodosFromStorage();
+        const todoIndex = todos.findIndex(item => item.id === todoId);
+        if (todoIndex > -1) {
+            todos[todoIndex].completed = isCompleted;
+            saveTodosToStorage(todos);
+        }
+    }
+
+    function removeTodoItem(todoId, listItemElement) {
+        if (listItemElement && listItemElement.parentNode === todoList) {
+            todoList.removeChild(listItemElement);
+        } else {
+            // Fallback if listItemElement is not correct, though it should be.
+            const itemToRemove = todoList.querySelector(`[data-id="${todoId}"]`);
+            if (itemToRemove) {
+                todoList.removeChild(itemToRemove);
+            }
+        }
+        let todos = getTodosFromStorage();
+        todos = todos.filter(item => item.id !== todoId);
+        saveTodosToStorage(todos);
+    }
+
+    // Common logic for creating a list item
+    function createTodoListItem(todo) {
+        const listItem = document.createElement('li');
+        listItem.draggable = true;
+        listItem.dataset.id = todo.id;
+
+        const textSpan = document.createElement('span');
+        textSpan.textContent = todo.text;
+        listItem.appendChild(textSpan);
+
+        const completeButton = document.createElement('button');
+        completeButton.textContent = 'Complete';
+        completeButton.classList.add('complete-btn');
+        completeButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            listItem.classList.toggle('completed');
+            updateTodoStatus(todo.id, listItem.classList.contains('completed'));
+        });
+
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.classList.add('remove-btn');
+        removeButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            removeTodoItem(todo.id, listItem);
+        });
+
+        const buttonsWrapper = document.createElement('div');
+        buttonsWrapper.appendChild(completeButton);
+        buttonsWrapper.appendChild(removeButton);
+        listItem.appendChild(buttonsWrapper);
+
+        if (todo.completed) {
+            listItem.classList.add('completed');
+        }
+
+        // Event Listeners for Drag & Drop
+        listItem.addEventListener('dragstart', handleDragStart);
+        listItem.addEventListener('dragover', handleDragOver);
+        listItem.addEventListener('dragenter', handleDragEnter);
+        listItem.addEventListener('dragleave', handleDragLeave);
+        listItem.addEventListener('drop', handleDrop);
+        listItem.addEventListener('dragend', handleDragEnd);
+
+        return listItem;
+    }
+
+    // Modify addTodoItem to use createTodoListItem
+    function addTodoItem() {
+        const todoText = todoInput.value.trim();
+        if (todoText === '') {
+            alert('To-do item cannot be empty!');
+            return;
+        }
+
+        const newTodo = {
+            text: todoText,
+            completed: false,
+            id: 'todo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9)
+        };
+
+        const listItem = createTodoListItem(newTodo);
+        todoList.appendChild(listItem);
+
+        let todos = getTodosFromStorage();
+        todos.push(newTodo);
+        saveTodosToStorage(todos);
+
+        todoInput.value = '';
+    }
+
+    // Modify loadTodos to use createTodoListItem
+    function loadTodos() {
+        let todos = getTodosFromStorage(); // Make sure to get mutable copy if needed for ID assignment
+        todoList.innerHTML = '';
+        let updated = false;
+        todos.forEach(todo => {
+            if (!todo.id) {
+                todo.id = 'todo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9) + '_' + todos.indexOf(todo);
+                updated = true; // Mark that an ID was generated
+            }
+            const listItem = createTodoListItem(todo);
+            todoList.appendChild(listItem);
+        });
+        if(updated) {
+            saveTodosToStorage(todos);
+        }
+    }
+
+    // Drag-and-Drop Handler Functions
+    function handleDragStart(e) {
+        draggedItem = this;
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        // Firefox requires dataTransfer to be set for drag to work
+        e.dataTransfer.setData('text/plain', this.dataset.id);
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        if (this !== draggedItem) {
+            this.classList.add('drag-over');
+        }
+    }
+
+    function handleDragEnter(e) {
+        e.preventDefault();
+        if (this !== draggedItem) {
+            this.classList.add('drag-over');
+        }
+    }
+
+    function handleDragLeave(e) {
+        // Do not remove 'drag-over' if leaving to enter a child of this element
+        if (e.relatedTarget && this.contains(e.relatedTarget)) {
+            return;
+        }
+        this.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.classList.remove('drag-over');
+        if (draggedItem === null || this === draggedItem) {
+            // Clean up classes on draggedItem if it exists (e.g. if dropped on itself or invalid target)
+            if(draggedItem) draggedItem.classList.remove('dragging');
+            draggedItem = null;
+            return;
+        }
+
+        const draggedItemId = draggedItem.dataset.id;
+        const targetItemId = this.dataset.id;
+
+        let todos = getTodosFromStorage();
+        const draggedItemIndex = todos.findIndex(todo => todo.id === draggedItemId);
+        const targetItemIndex = todos.findIndex(todo => todo.id === targetItemId);
+
+        if (draggedItemIndex === -1 || targetItemIndex === -1) {
+            console.error("Could not find dragged or target item in todos array.");
+            if(draggedItem) draggedItem.classList.remove('dragging');
+            draggedItem = null;
+            return;
+        }
+
+        const [reorderedItem] = todos.splice(draggedItemIndex, 1);
+        todos.splice(targetItemIndex, 0, reorderedItem);
+
+        saveTodosToStorage(todos);
+        // Instead of full loadTodos(), which rebuilds all DOM, manipulate DOM directly for smoother UX
+        // todoList.insertBefore(draggedItem, this.nextSibling === draggedItem ? this : this.nextSibling);
+        // For simplicity and data integrity with localStorage as source of truth, full reload is safer for now.
+        loadTodos();
+
+        // Ensure dragging class is removed from the original item after drop
+        // This is handled in handleDragEnd, but good to be sure.
+        // The original draggedItem DOM element is destroyed by loadTodos(), so no need to remove class from it.
+        draggedItem = null; // Reset draggedItem
+    }
+
+    function handleDragEnd(e) {
+        // This event fires on the source element after drag is complete.
+        // The 'dragging' class should be removed from the original dragged item if it still exists.
+        // However, if loadTodos() is called in handleDrop, the original DOM element is gone.
+        // If loadTodos() is NOT called, then this is important:
+        // if (draggedItem) { // draggedItem here refers to the original DOM element
+        //    draggedItem.classList.remove('dragging');
+        // }
+
+        // Clean up 'drag-over' from all items
+        document.querySelectorAll('#todo-list li').forEach(item => {
+            item.classList.remove('drag-over');
+        });
+        // Clean up 'dragging' from any item that might still have it (e.g., if drop failed or was on invalid target)
+        const stillDragging = document.querySelector('.dragging');
+        if (stillDragging) {
+            stillDragging.classList.remove('dragging');
+        }
+        draggedItem = null; // Reset in all cases
+    }
 
     // --- History Page Logic ---
     function showMainPage() {
         if (historyPage) historyPage.style.display = 'none';
-        // Show main app elements. Assumes they are children of appContainer which is already visible.
+
         if (document.getElementById('todo-input')) document.getElementById('todo-input').style.display = '';
         if (document.getElementById('add-todo-btn')) document.getElementById('add-todo-btn').style.display = '';
         if (document.getElementById('todo-list')) document.getElementById('todo-list').style.display = '';
         if (document.getElementById('end-day-btn')) document.getElementById('end-day-btn').style.display = '';
         if (document.getElementById('history-btn')) document.getElementById('history-btn').style.display = '';
-        if (document.querySelector('h1')) document.querySelector('h1').style.display = ''; // Show the main H1 for the to-do list
+
+        const mainH1 = document.querySelector('#app-container > h1'); // More specific selector for the main H1
+        if (mainH1) mainH1.style.display = '';
+
+
 
         if (datesList) datesList.innerHTML = '';
         if (archivedTasksList) archivedTasksList.innerHTML = '';
@@ -52,7 +268,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displayArchivedList(date) {
         if (!selectedHistoryDateSpan || !archivedTasksList) return;
-
         selectedHistoryDateSpan.textContent = date;
         archivedTasksList.innerHTML = '';
 
@@ -67,14 +282,12 @@ document.addEventListener('DOMContentLoaded', () => {
             archivedTasksList.appendChild(errorLi);
             return;
         }
-
         if (tasks.length === 0) {
             const noTasksLi = document.createElement('li');
             noTasksLi.textContent = 'No tasks for this date.';
             archivedTasksList.appendChild(noTasksLi);
             return;
         }
-
         tasks.forEach(task => {
             const li = document.createElement('li');
             li.textContent = task.text;
@@ -91,19 +304,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showHistoryPage() {
         if (historyPage) historyPage.style.display = 'block';
-        // Hide main app elements
+
         if (document.getElementById('todo-input')) document.getElementById('todo-input').style.display = 'none';
         if (document.getElementById('add-todo-btn')) document.getElementById('add-todo-btn').style.display = 'none';
         if (document.getElementById('todo-list')) document.getElementById('todo-list').style.display = 'none';
         if (document.getElementById('end-day-btn')) document.getElementById('end-day-btn').style.display = 'none';
         if (document.getElementById('history-btn')) document.getElementById('history-btn').style.display = 'none';
-         // Optionally hide the main H1 of the to-do list or change its text
-        if (document.querySelector('h1')) document.querySelector('h1').style.display = 'none';
+
+        const mainH1 = document.querySelector('#app-container > h1'); // More specific selector for the main H1
+        if (mainH1) mainH1.style.display = 'none';
+
 
 
         if (!datesList) return;
         datesList.innerHTML = '';
-
         let historyFound = false;
         try {
             for (let i = 0; i < localStorage.length; i++) {
@@ -127,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
             datesList.appendChild(errorLi);
             return;
         }
-        
+
         if (!historyFound) {
             const noHistoryLi = document.createElement('li');
             noHistoryLi.textContent = 'No history found.';
@@ -142,16 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const month = String(today.getMonth() + 1).padStart(2, '0');
         const day = String(today.getDate()).padStart(2, '0');
         const dateString = `${year}-${month}-${day}`;
-
-        let currentTodos;
-        try {
-            currentTodos = JSON.parse(localStorage.getItem('todos')) || [];
-        } catch (e) {
-            console.error('Error reading todos from localStorage:', e);
-            alert('Error reading your tasks. Please try again.');
-            return;
-        }
-
+        let currentTodos = getTodosFromStorage();
         if (currentTodos.length > 0) {
             try {
                 localStorage.setItem(`history_${dateString}`, JSON.stringify(currentTodos));
@@ -162,130 +367,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        try {
-            localStorage.setItem('todos', JSON.stringify([]));
-        } catch (e) {
-            console.error('Error clearing current todos in localStorage:', e);
-            alert('Error clearing current tasks. Please manually clear if issues persist.');
-        }
+        saveTodosToStorage([]); // Clear current todos
 
         todoList.innerHTML = '';
         alert('Day ended. Your list has been archived.');
     }
 
-    function addTodoItem() {
-        const todoText = todoInput.value.trim();
-
-        if (todoText === '') {
-            alert('To-do item cannot be empty!');
-            return;
-        }
-
-        const listItem = document.createElement('li');
-        const textSpan = document.createElement('span');
-        textSpan.textContent = todoText;
-        listItem.appendChild(textSpan);
-
-        const completeButton = document.createElement('button');
-        completeButton.textContent = 'Complete';
-        completeButton.classList.add('complete-btn');
-        completeButton.addEventListener('click', () => {
-            listItem.classList.toggle('completed');
-            let storedTodos = JSON.parse(localStorage.getItem('todos')) || [];
-            const todoIndex = storedTodos.findIndex(item => item.text === todoText);
-            if (todoIndex > -1) {
-                storedTodos[todoIndex].completed = listItem.classList.contains('completed');
-                localStorage.setItem('todos', JSON.stringify(storedTodos));
-            }
-        });
-
-        const removeButton = document.createElement('button');
-        removeButton.textContent = 'Remove';
-        removeButton.classList.add('remove-btn');
-        removeButton.addEventListener('click', () => {
-            todoList.removeChild(listItem);
-            let storedTodos = JSON.parse(localStorage.getItem('todos')) || [];
-            const updatedTodos = storedTodos.filter(item => item.text !== todoText);
-            localStorage.setItem('todos', JSON.stringify(updatedTodos));
-        });
-
-        const buttonsWrapper = document.createElement('div');
-        buttonsWrapper.appendChild(completeButton);
-        buttonsWrapper.appendChild(removeButton);
-        listItem.appendChild(buttonsWrapper);
-
-        todoList.appendChild(listItem);
-        todoInput.value = '';
-
-        let todos = JSON.parse(localStorage.getItem('todos')) || [];
-        todos.push({ text: todoText, completed: false });
-        localStorage.setItem('todos', JSON.stringify(todos));
-    }
-
-    function loadTodos() {
-        // const todoList = document.getElementById('todo-list'); // Already defined
-        let todos = JSON.parse(localStorage.getItem('todos')) || [];
-
-        if (todos.length === 0) {
-            return;
-        }
-
-        todos.forEach((todo) => {
-            const listItem = document.createElement('li');
-            if (todo.completed) {
-                listItem.classList.add('completed');
-            }
-
-            const textSpan = document.createElement('span');
-            textSpan.textContent = todo.text;
-            listItem.appendChild(textSpan);
-
-            const completeButton = document.createElement('button');
-            completeButton.textContent = 'Complete';
-            completeButton.classList.add('complete-btn');
-            completeButton.addEventListener('click', () => {
-                listItem.classList.toggle('completed');
-                let storedTodos = JSON.parse(localStorage.getItem('todos')) || [];
-                const todoIndex = storedTodos.findIndex(item => item.text === todo.text);
-                if (todoIndex > -1) {
-                    storedTodos[todoIndex].completed = !storedTodos[todoIndex].completed;
-                    localStorage.setItem('todos', JSON.stringify(storedTodos));
-                }
-            });
-
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'Remove';
-            removeButton.classList.add('remove-btn');
-            removeButton.addEventListener('click', () => {
-                todoList.removeChild(listItem);
-                let storedTodos = JSON.parse(localStorage.getItem('todos')) || [];
-                const updatedTodos = storedTodos.filter(item => item.text !== todo.text);
-                localStorage.setItem('todos', JSON.stringify(updatedTodos));
-            });
-
-            const buttonsWrapper = document.createElement('div');
-            buttonsWrapper.appendChild(completeButton);
-            buttonsWrapper.appendChild(removeButton);
-            listItem.appendChild(buttonsWrapper);
-
-            todoList.appendChild(listItem);
-        });
-    }
 
     addTodoBtn.addEventListener('click', addTodoItem);
     if (endDayBtn) endDayBtn.addEventListener('click', endDay);
     if (historyBtn) historyBtn.addEventListener('click', showHistoryPage);
     if (backToMainBtn) backToMainBtn.addEventListener('click', showMainPage);
-
     todoInput.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
             addTodoItem();
         }
     });
 
-    // Dark Mode Functionality is now primarily handled by auth.js
-    // No need for redundant listeners or initial theme setting here.
 
-    // Initial setup for the page
-    showMainPage(); // Show the main to-do list part within the app-container by default
+    // Initial setup
+    loadTodos(); // Load existing todos
+    showMainPage(); // Show the main to-do list part by default
+
 });
