@@ -234,10 +234,19 @@ button:active, input[type="submit"]:active {
 
 /* Container for action buttons like End Day, View History, Logout */
 #app-container > button:not(#add-todo-btn) {
+    /* This rule might need review as history-btn and logout-btn are moved */
     margin: 5px;
 }
-#end-day-btn, #history-btn, #logout-btn, #back-to-main-btn {
-    /* Inherit general button styles, which is now text-transform: none; */
+
+#end-day-btn {
+    display: block; /* To allow margin auto centering */
+    margin: 20px auto; /* Top/bottom margin 20px, left/right auto for centering */
+    /* Inherit general button styles */
+}
+
+#history-btn, #logout-btn, #back-to-main-btn {
+    /* These buttons are styled by navbar rules or general button rules if elsewhere */
+    /* #history-btn and #logout-btn are in the navbar */
 }
 
 
@@ -578,4 +587,164 @@ body.dark-mode #todo-list li.drag-over {
     /* Or use background color change: */
     /* background-color: #303640; */ /* Slightly lighter than item bg for dark mode hover */
 
+}
+
+/* Navbar Styles */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    width: 100%;
+    position: fixed; /* Make navbar fixed at the top */
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Ensure navbar is above other content */
+}
+
+body {
+    padding-top: 70px; /* Add padding to body to offset fixed navbar */
+}
+
+
+.nav-title h1 {
+    font-size: 1.75rem; /* Adjusted for navbar */
+    margin: 0; /* Remove default margin */
+}
+
+#darkModeToggleContainer {
+    position: static; /* Override fixed positioning */
+    /* Styling for dark mode toggle within navbar is handled by flexbox */
+}
+
+.nav-buttons button {
+    margin-left: 10px;
+}
+
+.dropdown {
+    position: relative;
+    display: none; /* Hidden by default, shown on mobile */
+}
+
+.dropdown-toggle {
+    /* Style as needed, can be an icon or text */
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    z-index: 1001; /* Above navbar */
+    min-width: 160px;
+}
+
+.dropdown-menu button {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    text-align: left;
+    border: none;
+    background: none;
+    color: #333;
+}
+
+.dropdown-menu button:hover {
+    background-color: #f0f0f0;
+}
+
+/* Dark Mode Navbar Styles */
+body.dark-mode nav {
+    background-color: #343a40;
+    border-bottom-color: #495057;
+}
+
+body.dark-mode .nav-title h1 {
+    color: #E2E8F0; /* Match general dark mode text */
+}
+
+body.dark-mode .nav-buttons button {
+    /* Button styles are handled by general dark mode button rules */
+}
+body.dark-mode .dropdown-toggle {
+    /* Adjust if needed for dark mode */
+}
+body.dark-mode .dropdown-menu {
+    background-color: #2D3748; /* Dark background for dropdown */
+    border-color: #4A5568;
+}
+
+body.dark-mode .dropdown-menu button {
+    color: #E2E8F0; /* Light text for dropdown items */
+}
+
+body.dark-mode .dropdown-menu button:hover {
+    background-color: #4A5568; /* Darker hover for dropdown items */
+}
+
+
+/* Responsive Navbar Styles */
+/* Mobile/Tablet (< 768px) */
+@media (max-width: 767.98px) {
+    nav {
+        justify-content: space-between;
+    }
+
+    .nav-title {
+        order: 1; /* Title first */
+        flex-grow: 1; /* Allow title to take space */
+        text-align: left;
+    }
+
+    #darkModeToggleContainer {
+        order: 2; /* Dark mode toggle second (center) */
+        /* margin: 0 auto; Pushes to center if title and menu have defined widths or flex-grow:0 */
+    }
+
+    .nav-buttons {
+        order: 3; /* Buttons/Menu third */
+    }
+
+    .nav-buttons > button { /* Hide desktop buttons */
+        display: none;
+    }
+
+    .dropdown {
+        display: inline-block; /* Show dropdown structure */
+    }
+}
+
+/* Desktop (>= 768px) */
+@media (min-width: 768px) {
+    nav {
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #darkModeToggleContainer {
+        order: 1; /* Left */
+    }
+
+    .nav-title {
+        order: 2; /* Center */
+        text-align: center;
+        flex-grow: 1; /* Allow title to expand and push others */
+    }
+
+    .nav-buttons {
+        order: 3; /* Right */
+    }
+
+    .nav-buttons .dropdown { /* Hide dropdown menu on desktop */
+        display: none;
+    }
+
+    .nav-buttons > button { /* Ensure desktop buttons are visible */
+        display: inline-block;
+    }
 }
