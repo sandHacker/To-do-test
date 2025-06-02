@@ -7,9 +7,25 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="darkModeToggleContainer">
-        <div id="darkModeToggle">🌙</div>
-    </div>
+    <nav>
+        <div id="darkModeToggleContainer">
+            <div id="darkModeToggle">🌙</div>
+        </div>
+        <div class="nav-title">
+            <h1>To-Do List</h1>
+        </div>
+        <div class="nav-buttons">
+            <button id="history-btn">View History</button>
+            <button id="logout-btn" style="display:none;">Logout</button>
+            <div class="dropdown">
+                <button class="dropdown-toggle">Menu</button>
+                <div class="dropdown-menu">
+                    <button id="history-btn-mobile">View History</button>
+                    <button id="logout-btn-mobile" style="display:none;">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <div id="auth-container">
         <h1>Welcome to Your To-Do List</h1>
@@ -19,15 +35,12 @@
     </div>
 
     <div id="app-container" style="display:none;"> <!-- App content will be hidden initially -->
-        <h1>To-Do List</h1>
         <input type="text" id="todo-input" placeholder="Enter a new to-do item">
         <button id="add-todo-btn">Add To-Do</button>
-        <button id="end-day-btn">End Day</button>
-        <button id="history-btn">View History</button>
-        <button id="logout-btn" style="display:none;">Logout</button> <!-- Logout button added here -->
         <ul id="todo-list">
             <!-- To-do items will be added here by JavaScript -->
         </ul>
+        <button id="end-day-btn">End Day</button>
 
         <div id="history-page" style="display:none;">
             <h2>History</h2>
