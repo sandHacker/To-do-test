@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
     const logoutBtn = document.getElementById('logout-btn');
+    const logoutBtnMobile = document.getElementById('logout-btn-mobile'); // Added mobile logout button
     const authContainer = document.getElementById('auth-container'); // On index.html
     const appContainer = document.getElementById('app-container');   // On index.html
 
@@ -22,12 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!loggedInUser) {
             if (authContainer) authContainer.style.display = 'block';
             if (appContainer) appContainer.style.display = 'none';
-            if (logoutBtn) logoutBtn.style.display = 'none'; // Ensure logout is hidden if not logged in
+            if (logoutBtn) logoutBtn.style.display = 'none';
+            if (logoutBtnMobile) logoutBtnMobile.style.display = 'none'; // Ensure mobile logout is hidden
         } else {
             // User is logged in, show app, hide auth links
             if (authContainer) authContainer.style.display = 'none';
             if (appContainer) appContainer.style.display = 'block';
-            if (logoutBtn) logoutBtn.style.display = 'inline-block'; // Show logout button
+            if (logoutBtn) logoutBtn.style.display = 'inline-block';
+            if (logoutBtnMobile) logoutBtnMobile.style.display = 'block'; // Show mobile logout button (use 'block' for <a> in <li>)
         }
     } else if (currentPage === 'login.html' || currentPage === 'signup.html') {
         if (loggedInUser) {
@@ -110,10 +113,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Logout Logic (for index.html) ---
+    function handleLogout() {
+        localStorage.removeItem('loggedInUser');
+        window.location.href = 'login.html';
+    }
+
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            localStorage.removeItem('loggedInUser');
-            window.location.href = 'login.html';
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+
+    if (logoutBtnMobile) {
+        logoutBtnMobile.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent default anchor behavior
+            handleLogout();
+            // No need to explicitly close dropdownMenu here as page navigates away
         });
     }
 

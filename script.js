@@ -389,4 +389,31 @@ document.addEventListener('DOMContentLoaded', () => {
     loadTodos(); // Load existing todos
     showMainPage(); // Show the main to-do list part by default
 
+    // Hamburger Menu Toggle
+    const dropdownToggle = document.querySelector('.dropdown-toggle');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
+
+    if (dropdownToggle && dropdownMenu) {
+        dropdownToggle.addEventListener('click', function(event) {
+            event.preventDefault();
+            dropdownMenu.classList.toggle('active');
+        });
+
+        // Close dropdown if clicked outside
+        document.addEventListener('click', function(event) {
+            if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
+    }
+
+    // Mobile History Button
+    const historyBtnMobile = document.getElementById('history-btn-mobile');
+    if (historyBtnMobile && typeof showHistoryPage === 'function' && dropdownMenu) {
+        historyBtnMobile.addEventListener('click', function(event) {
+            event.preventDefault();
+            showHistoryPage();
+            dropdownMenu.classList.remove('active'); // Close menu
+        });
+    }
 });
